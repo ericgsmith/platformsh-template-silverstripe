@@ -1,0 +1,78 @@
+# This file describes an application. You can have multiple applications
+# in the same project.
+#
+# See https://docs.platform.sh/user_guide/reference/platform-app-yaml.html
+
+# The name of this app. Must be unique within a project.
+name: 'app'
+
+# The runtime the application uses.
+type: 'php:7.1'
+
+# Configuration of the build of this application.
+build:
+  flavor: composer
+
+# The build-time dependencies of the app.
+#dependencies:
+#    php:
+#        "wkhtmltopdf-binary": "> 0.0"
+
+# The relationships of the application with services or other applications.
+#
+# The left-hand side is the name of the relationship as it will be exposed
+# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
+# side is in the form <service name>:<endpoint name>.
+relationships:
+  database: 'mysqldb:mysql'
+#    solr: 'solrsearch:solr'
+#    redis: 'rediscache:redis'
+
+# The size of the persistent disk of the application (in MB).
+disk: 2048
+
+# The configuration of app when it is exposed to the web.
+web:
+  # Specific parameters for different URL prefixes.
+  locations:
+    '/':
+      # The folder from which to serve static assets, for this location.
+      #
+      # This is a filesystem path, relative to the application root.
+      root: 'public'
+
+      # Whether to forward disallowed and missing resources from this
+      # location to the application.
+      #
+      # Can be true, false or a URI path string.
+      passthru: '/index.php'
+
+# The mounts that will be performed when the package is deployed.
+mounts:
+  "/silverstripe-cache": "shared:files/cache"
+  "public/assets/" : "shared:files/assets"
+
+# The hooks executed at various points in the lifecycle of the application.
+hooks:
+  # Build hooks.
+  build: |
+    composer vendor-expose
+    curl -sS https://platform.sh/cli/installer | php
+
+  # Cron jobs.
+crons:
+  # Backup environment.
+  snapshot:
+    spec: '0 5 * * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+          platform snapshot:create --yes --no-wait
+      fi
+  # Renew https cert.
+  renewcert:
+    # Force a redeploy at 10 am (UTC) on the 1st and 15th of every month.
+    spec: '0 10 1,15 * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+          platform redeploy --yes --no-wait
+      fi
