@@ -50,7 +50,7 @@ web:
 # The mounts that will be performed when the package is deployed.
 mounts:
   "/silverstripe-cache": "shared:files/cache"
-  "public/assets/" : "shared:files/assets"
+  "/public/assets/" : "shared:files/assets"
 
 # The hooks executed at various points in the lifecycle of the application.
 hooks:
@@ -59,7 +59,7 @@ hooks:
     composer vendor-expose
     curl -sS https://platform.sh/cli/installer | php
 
-  # Cron jobs.
+# Cron jobs.
 crons:
   # Backup environment.
   snapshot:
