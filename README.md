@@ -2,7 +2,7 @@
 
 Starter kit for a new [SilverStripe](http://silverstripe.org) 4.X project on [Platform.sh](https://platform.sh)
 
-## 1.0 Git setup
+## 1. Git setup
 
 Clone this repo locally and remove the origin.
 
@@ -16,7 +16,7 @@ Create a new Platform.sh project and when asked if you want to create a blank si
 
 Add the platform remote from the information displayed in the UI.
 
-## 2.0 Local setup
+## 2. Local setup
 
 The SilverStripe installer needs write access to files that should be read only on the server, so you will need do a fresh install locally first.
 
@@ -34,7 +34,7 @@ This will set the database connection information.
 
 Add and commit this change the to repo and push to Platform.sh.
 
-## 3.0 Import DB
+## 3. Import DB
 
 Create a DB dump from your local install.
 
@@ -55,7 +55,7 @@ platform sql < dbfile.sql
 mysql -h database.internal -P 3306 -u user main < dbfile.sql
 ```
 
-## 4.0 Platform.sh Variables
+## 4. Platform.sh Variables
 
 ### Admin User
 
